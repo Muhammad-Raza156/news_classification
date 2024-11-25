@@ -76,13 +76,17 @@ def multinomialNB_classifier(X_train, y_train, X_test, y_test):
     mnb_model = MultinomialNB()
     mnb_model.fit(X_train, y_train)
     y_pred = mnb_model.predict(X_test)
+    with open("multinomial_nb_model.pkl", "wb") as f:
+        pickle.dump(mnb_model, f)
     return mnb_model, accuracy_score(y_test, y_pred), classification_report(y_test, y_pred)
 
 def rf_classifier(X_train, y_train, X_test, y_test):
-    rf_model = RandomForestClassifier(n_estimators=120, random_state=42)
+    rf_model = RandomForestClassifier(n_estimators=140, max_depth=45, random_state=42)
     rf_model.fit(X_train, y_train)
     y_pred = rf_model.predict(X_test)
     y_pred_proba = rf_model.predict_proba(X_test)[:, 1]
+    with open("random_forest_model.pkl", "wb") as f:
+        pickle.dump(rf_model, f)
     return rf_model, roc_auc_score(y_test, y_pred_proba), accuracy_score(y_test, y_pred), classification_report(y_test, y_pred), y_pred_proba
 
 def roc_plot(y_test, y_pred_proba):
@@ -108,12 +112,12 @@ if __name__ == "__main__":
     print("Classification Report for GaussianNB:\n", gnb_report)
 
     # Train and evaluate MultinomialNB
-    mnb_accuracy, mnb_report, mnb_model = multinomialNB_classifier(X_train, y_train, X_test, y_test)
+    mnb_model,mnb_accuracy, mnb_report= multinomialNB_classifier(X_train, y_train, X_test, y_test)
     print(f"MultinomialNB Accuracy: {mnb_accuracy:.4f}")
     print("Classification Report for MultinomialNB:\n", mnb_report)
 
     # Train and evaluate RandomForest
-    rf_auc, rf_accuracy, rf_report, rf_y_pred_proba, rf_model = rf_classifier(X_train, y_train, X_test, y_test)
+    rf_model, rf_auc, rf_accuracy, rf_report, rf_y_pred_proba= rf_classifier(X_train, y_train, X_test, y_test)
     print(f"RandomForest AUC-ROC Score: {rf_auc:.4f}")
     print(f"RandomForest Accuracy: {rf_accuracy:.4f}")
     print("Classification Report for RandomForest:\n", rf_report)
@@ -122,9 +126,9 @@ if __name__ == "__main__":
     roc_plot(y_test, rf_y_pred_proba)
 
     # Save models
-    with open("multinomial_nb_model.pkl", "wb") as f:
-        pickle.dump(mnb_model, f)
-    with open("random_forest_model.pkl", "wb") as f:
-        pickle.dump(rf_model, f)
+    # with open("multinomial_nb_model.pkl", "wb") as f:
+    #     pickle.dump(mnb_model, f)
+    # with open("random_forest_model.pkl", "wb") as f:
+    #     pickle.dump(rf_model, f)
     with open("count_vectorizer.pkl", "wb") as f:
         pickle.dump(tfidf, f)

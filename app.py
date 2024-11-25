@@ -80,14 +80,14 @@ if st.button("Classify"):
         
         # Display predictions
         if nb_pred[0] == 0:
-            prediction= 'Real'
+            prediction= 'Fake'
         else:
-            prediction = 'Fake'
-        st.write(f"MultinomialNB Prediction: {prediction}")
+            prediction = 'Real'
+        st.subheader(f"MultinomialNB Prediction: {prediction}")
         if rf_pred[0] == 0:
-            rf_prediction= 'Real'
+            rf_prediction= 'Fake'
         else:
-            rf_prediction = 'Fake'
-        st.write(f"RandomForest Prediction: {rf_prediction}")
+            rf_prediction = 'Real'
+        st.subheader(f"RandomForest Prediction: {rf_prediction}")
     else:
-        st.warning("Please enter some text for classification.")
+        st.error("Please enter some text for classification.")
